@@ -27,7 +27,7 @@ def fetch_data():
     cur.execute("""
                 select * from flights
                 """)
-    rows = cur.fetchhall()
+    rows = cur.fetchall()
     con.close
     return rows
 
