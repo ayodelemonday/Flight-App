@@ -1,6 +1,9 @@
 import tkinter as tk
 import tkinter.messagebox as message
 import sqlite3
+import subprocess
+from tkinter import ttk
+from tkinter import END
 
 master = tk.Tk()
 master.geometry("1000x1000+300+0")
@@ -15,6 +18,25 @@ master.configure(background= "#141444")
 
 def frontdesk():
     subprocess.popen(["python", "office.py"])
+
+
+
+def fetch_data():
+    con = sqlite3.connect("Airline.db")
+    cur = con.cursor()
+    cur.execute("""
+                select * from flights
+                """)
+    rows = cur.fetchhall()
+    con.close
+    return rows
+
+
+
+def display_data():
+    for row in fetch_data():
+        tree.insert("" ,END, value= row)
+
 
 # C = CREAT
 def add():
@@ -169,6 +191,21 @@ labelfront.place(x= 600, y= 80)
 
 rightframe = tk.Frame(master, width= 500, height= 1000, bg= "#80184c")
 rightframe.place(x= 500, y= 150)
+
+
+labelright =  tk.Label(rightframe, text= "Flight Booking")
+labelright.place(x= 0, y= 0)
+cols = ("ID", "Flight number", "Origin", "Departure time", "Arrival_time", "Destination")
+tree = ttk.Treeview(rightframe,columns= cols, show= "headings")
+
+for col in cols:
+    tree.heading(col, text= col)
+    tree.column(col, width= 80)
+
+tree.place(x= 0, y=50)
+
+
+display_data()
 
 
 
